@@ -6,14 +6,33 @@ import SearchBooks from './SearchBooks'
 import BookShelf from './BookShelf'
 
 class BooksApp extends React.Component {
-  state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false
+  constructor(props){
+    super(props)
+    this.state = {
+      currentlyReading: [],
+      wantToRead: [],
+      read: []
+    }
+    this.updateShelf=this.updateShelf.bind(this)
+  }
+
+  updateState() {
+    const z = {currentlyReading:[], wantToRead:[], read:[]}
+
+    BooksAPI.getAll().then(data => {
+      data.forEach(book => z[book.shelf].push(book))
+      this.setState(z)
+    })
+  }
+
+  componentDidMount(){
+    this.updateState()
+  }
+
+  updateShelf(book) {
+    BooksAPI.update(book, book.shelf).then(()=>{
+      this.updateState()
+    })
   }
 
   render() {
@@ -31,12 +50,18 @@ class BooksApp extends React.Component {
                 <div>
                   <BookShelf
                     title='Currently Reading'
+                    books={this.state.currentlyReading}
+                    update={this.updateShelf}
                   />
                   <BookShelf
                     title='Want to Read'
+                    books={this.state.wantToRead}
+                    update={this.updateShelf}
                   />
                   <BookShelf
                     title='Read'
+                    books={this.state.read}
+                    update={this.updateShelf}
                   />
                 </div>
               </div>

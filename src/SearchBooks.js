@@ -6,7 +6,12 @@ class SearchBooks extends Component {
   state = {}
 
   // methods
-
+  componentDidMount() {
+    bapi.getAll().then(data =>this.setState({books: data}))
+    bapi.get("nggnmAEACAAJ").then(data => this.setState({book: data}))
+    const auth = "Art"
+    bapi.search(auth).then(data => this.setState({rslt: data}))
+  }
   // render
   render() {
     return (
@@ -27,10 +32,10 @@ class SearchBooks extends Component {
               you don't find a specific author or title. Every search is limited by search terms.
             */}
             <input type="text" placeholder="Search by title or author"/>
-
           </div>
         </div>
         <div className="search-books-results">
+          <code>JSON see debugger</code>
           <ol className="books-grid"></ol>
         </div>
       </div>
