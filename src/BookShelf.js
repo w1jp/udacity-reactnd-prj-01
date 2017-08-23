@@ -1,12 +1,10 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
-// import * as bapi from './BooksAPI'
 
+// BookShelf component is used to render a shelf in the application. It is
+// passed the books on the shelf, the title, and the parent object.
 class BookShelf extends Component {
-  state = {}
-
-  // methods
-
+  // This component has no local state and uses parent's state.
   // render
   render() {
     return (
@@ -20,9 +18,12 @@ class BookShelf extends Component {
                   <div className="book-top">
                     <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
                     <div className="book-shelf-changer">
-                      <select value={book.shelf} onChange={(event) => {
-                        book.shelf=event.target.value
-                        this.props.update(book)
+                      <select
+                        value={book.shelf}
+                        onChange={(event) => {
+                          // handler to update shelf selection
+                          book.shelf=event.target.value
+                          this.props.parent.updateShelf(book)
                       }}>
                         <option value="none" disabled>Move to...</option>
                         <option value="currentlyReading">Currently Reading</option>
@@ -37,25 +38,6 @@ class BookShelf extends Component {
                 </div>
               </li>
             ))}
-            {/* <li>
-              <div className="book">
-                <div className="book-top">
-                  <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url("http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api")' }}></div>
-                  <div className="book-shelf-changer">
-                    <select>
-                      <option value="none" disabled>Move to...</option>
-                      <option value="currentlyReading">Currently Reading</option>
-                      <option value="wantToRead">Want to Read</option>
-                      <option value="read">Read</option>
-                      <option value="none">None</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="book-title">To Kill a Mockingbird</div>
-                <div className="book-authors">Harper Lee</div>
-              </div>
-            </li>
- */}
           </ol>
         </div>
       </div>    )

@@ -13,25 +13,31 @@ class BooksApp extends React.Component {
       wantToRead: [],
       read: []
     }
-    this.updateShelf=this.updateShelf.bind(this)
   }
 
+  // updateState()
+  // This helper function is used by the App and its children to update
+  // the state of the application and rerender the UI.
   updateState() {
-    const z = {currentlyReading:[], wantToRead:[], read:[]}
-
+    const z = {currentlyReading:[], wantToRead:[], read:[]} // reset state
     BooksAPI.getAll().then(data => {
       data.forEach(book => z[book.shelf].push(book))
       this.setState(z)
     })
   }
 
+  // componentDidMount()
+  // This function calls updateState() to fetch the books from the backend server
   componentDidMount(){
     this.updateState()
   }
 
+
+  // updateShelf()
+  // This is a helper function to update a book on the backed server
   updateShelf(book) {
     BooksAPI.update(book, book.shelf).then(()=>{
-      this.updateState()
+      this.updateState()  // update the local state to force render()
     })
   }
 
@@ -39,7 +45,14 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
           <Route path="/search" render={() => (
-            <SearchBooks />
+            <SearchBooks
+              books={[
+                ...this.state.currentlyReading,
+                ...this.state.wantToRead,
+                ...this.state.read
+              ]}
+              parent={this} 
+            />
           )}/>
           <Route exact path="/" render={() => (
             <div className="list-books">
@@ -51,17 +64,17 @@ class BooksApp extends React.Component {
                   <BookShelf
                     title='Currently Reading'
                     books={this.state.currentlyReading}
-                    update={this.updateShelf}
+                    parent={this}
                   />
                   <BookShelf
                     title='Want to Read'
                     books={this.state.wantToRead}
-                    update={this.updateShelf}
+                    parent={this}
                   />
                   <BookShelf
                     title='Read'
                     books={this.state.read}
-                    update={this.updateShelf}
+                    parent={this}
                   />
                 </div>
               </div>
